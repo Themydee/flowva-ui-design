@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../../styles/style.css';
+import { FaGlobeAmericas } from "react-icons/fa";
 
 const ForgotPassword = ({ toggleForm }) => {
     const [email, setEmail] = useState('');
@@ -18,10 +18,22 @@ const ForgotPassword = ({ toggleForm }) => {
     };
 
     return (
-        <form className="animate-form" onSubmit={handleSubmit}>
-            <div className="logo">Flowva</div>
-            <div className="welcome">Reset your password</div>
-            {message && <div className="form-message error-message">{message}</div>}
+        <form onSubmit={handleSubmit} className="auth-form animate-fadeInUp">
+            <div className="form-header">
+                <div className="logo">
+                    <FaGlobeAmericas className="logo-icon" /> 
+                    <span>Flowva</span>
+                </div>
+            </div>
+
+            <div className="form-title">Reset your password</div>
+
+            {message && (
+                <div className="message error-message">
+                    {message}
+                </div>
+            )}
+
             <div className="form-group">
                 <label htmlFor="forgot-email">Email</label>
                 <input
@@ -33,9 +45,16 @@ const ForgotPassword = ({ toggleForm }) => {
                     required
                 />
             </div>
-            <button type="submit" className="btn">Send reset link</button>
+
+            <button type="submit" className="btn">
+                Send reset link
+            </button>
+
             <div className="form-footer">
-                Remember your password? <a href="#" onClick={() => toggleForm('signin')}>Sign in</a>
+                Remember your password?{' '}
+                <a href="#" onClick={() => toggleForm('signin')} className="link">
+                    Sign in
+                </a>
             </div>
         </form>
     );

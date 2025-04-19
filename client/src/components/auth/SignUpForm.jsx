@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import '../../styles/style.css';
+import { useNavigate } from 'react-router-dom';
+import { FaGlobeAmericas } from "react-icons/fa";
+import zxcvbn from 'zxcvbn';
 
 const SignUpForm = ({ toggleForm }) => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [passwordStrength, setPasswordStrength] = useState(null);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -23,15 +27,35 @@ const SignUpForm = ({ toggleForm }) => {
         }
         setMessage('Creating your account...');
         setTimeout(() => {
-            setMessage('Account created successfully! Welcome to Flowva.');
+            setMessage('Account created successfully! Redirecting...');
+            navigate('/onboarding');
         }, 1500);
     };
 
+    const handlePasswordChange = (e) => {
+        const newPassword = e.target.value;
+        setPassword(newPassword);
+        const strength = zxcvbn(newPassword);
+        setPasswordStrength(strength);
+    };
+
     return (
-        <form className="animate-form" onSubmit={handleSubmit}>
-            <div className="logo">Flowva</div>
-            <div className="welcome">Join Flowva today</div>
-            {message && <div className="form-message error-message">{message}</div>}
+        <form onSubmit={handleSubmit} className="auth-form animate-fadeInUp">
+            <div className="form-header">
+                <div className="logo">
+                    <FaGlobeAmericas className="logo-icon" /> 
+                    <span>Flowva</span>
+                </div>
+            </div>
+            
+            <div className="form-title">Join Flowva today</div>
+            
+            {message && (
+                <div className="message error-message">
+                    {message}
+                </div>
+            )}
+
             <div className="form-group">
                 <label htmlFor="signup-email">Email</label>
                 <input
@@ -43,6 +67,7 @@ const SignUpForm = ({ toggleForm }) => {
                     required
                 />
             </div>
+
             <div className="form-group">
                 <label htmlFor="signup-password">Password</label>
                 <input
@@ -50,10 +75,29 @@ const SignUpForm = ({ toggleForm }) => {
                     id="signup-password"
                     placeholder="••••••••"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={handlePasswordChange}
                     required
                 />
+                {passwordStrength && (
+                    <div className="password-strength-meter">
+                        <div className="strength-bar">
+                            <div 
+                                className={`strength-indicator ${
+                                    passwordStrength.score >= 3 
+                                        ? 'strong' 
+                                        : passwordStrength.score === 2 
+                                        ? 'medium' 
+                                        : 'weak'
+                                }`}
+                            ></div>
+                        </div>
+                        <p className="strength-text">
+                            {['Weak', 'Weak', 'Medium', 'Strong', 'Very Strong'][passwordStrength.score]}
+                        </p>
+                    </div>
+                )}
             </div>
+
             <div className="form-group">
                 <label htmlFor="confirm-password">Confirm Password</label>
                 <input
@@ -65,9 +109,16 @@ const SignUpForm = ({ toggleForm }) => {
                     required
                 />
             </div>
-            <button type="submit" className="btn">Create account</button>
+
+            <button type="submit" className="btn">
+                Create account
+            </button>
+
             <div className="form-footer">
-                Already have an account? <a href="#" onClick={() => toggleForm('signin')}>Sign in</a>
+                Already have an account?{' '}
+                <a href="#" onClick={() => toggleForm('signin')} className="link">
+                    Sign in
+                </a>
             </div>
         </form>
     );

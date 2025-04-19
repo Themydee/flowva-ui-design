@@ -38,19 +38,19 @@ body {
     line-height: 1.6;
 }
 
-.container {
-    background-color: white;
+.auth-form {
+    width: 100%;
+    max-width: 1000px;
+    background: white;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
-    width: 100%;
-    max-width: 420px;
     padding: 40px;
     position: relative;
     overflow: hidden;
     transition: var(--transition);
 }
 
-.container::before {
+.auth-form::before {
     content: '';
     position: absolute;
     top: 0;
@@ -60,24 +60,29 @@ body {
     background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
 }
 
-.container:hover {
+.auth-form:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
-    color: var(--primary);
-    font-size: 28px;
-    font-weight: 800;
-    margin-bottom: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    color: var(--primary);
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 30px;
+    gap: 8px;
 }
 
-.welcome {
-    font-size: 24px;
+.logo-icon {
+    width: 28px;
+    height: 28px;
+}
+
+.form-title {
+    font-size: 20px;
     font-weight: 700;
     color: var(--gray-700);
     margin-bottom: 30px;
@@ -93,8 +98,8 @@ body {
     display: block;
     margin-bottom: 8px;
     font-size: 14px;
-    color: var(--gray-700);
     font-weight: 500;
+    color: var(--gray-700);
 }
 
 .form-group input {
@@ -103,9 +108,9 @@ body {
     border: 1px solid var(--gray-300);
     border-radius: var(--radius);
     font-size: 15px;
-    transition: var(--transition);
     background-color: var(--gray-50);
     box-shadow: var(--shadow-sm);
+    transition: var(--transition);
 }
 
 .form-group input:focus {
@@ -147,21 +152,19 @@ body {
     border-radius: var(--radius);
     background-color: var(--primary);
     color: white;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    margin-bottom: 20px;
     transition: var(--transition);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    box-shadow: var(--shadow-md);
+    margin-bottom: 20px;
 }
 
 .btn:hover {
     background-color: var(--primary-dark);
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
 }
 
@@ -207,7 +210,7 @@ body {
 
 .form-footer {
     text-align: center;
-    margin-top: 25px;
+    margin-top: 24px;
     font-size: 14px;
     color: var(--gray-600);
 }
@@ -302,11 +305,11 @@ body {
 }
 
 @media (max-width: 480px) {
-    .container {
+    .auth-form {
         padding: 30px 20px;
     }
     
-    .welcome {
-        font-size: 20px;
+    .form-title {
+        font-size: 18px;
     }
 }
