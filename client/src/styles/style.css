@@ -15,6 +15,7 @@
     --radius-lg: 16px;
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
     --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
@@ -33,12 +34,14 @@ body {
     align-items: center;
     padding: 20px;
     color: var(--gray-700);
+    font-size: 16px;
+    line-height: 1.6;
 }
 
 .container {
     background-color: white;
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-lg);
     width: 100%;
     max-width: 420px;
     padding: 40px;
@@ -57,19 +60,25 @@ body {
     background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
 }
 
+.container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
 .logo {
     color: var(--primary);
-    font-size: 24px;
-    font-weight: 700;
+    font-size: 28px;
+    font-weight: 800;
     margin-bottom: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .welcome {
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 24px;
+    font-weight: 700;
     color: var(--gray-700);
     margin-bottom: 30px;
     text-align: center;
@@ -96,12 +105,13 @@ body {
     font-size: 15px;
     transition: var(--transition);
     background-color: var(--gray-50);
+    box-shadow: var(--shadow-sm);
 }
 
 .form-group input:focus {
     border-color: var(--primary);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.2);
+    box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.2);
     background-color: white;
 }
 
@@ -137,8 +147,8 @@ body {
     border-radius: var(--radius);
     background-color: var(--primary);
     color: white;
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
     margin-bottom: 20px;
     transition: var(--transition);
@@ -146,12 +156,13 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    box-shadow: var(--shadow-md);
 }
 
 .btn:hover {
     background-color: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(124, 77, 255, 0.2);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
 }
 
 .btn:active {
@@ -166,8 +177,8 @@ body {
 
 .btn-secondary:hover {
     background-color: var(--gray-50);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
 }
 
 .divider {
@@ -217,6 +228,14 @@ body {
     border-radius: var(--radius);
     margin-bottom: 20px;
     font-size: 14px;
+    display: block;
+}
+
+.form-message.visible {
+    display: block;
+}
+
+.form-message.hidden {
     display: none;
 }
 
@@ -290,20 +309,4 @@ body {
     .welcome {
         font-size: 20px;
     }
-}
-
-.form-message {
-    padding: 12px;
-    border-radius: var(--radius);
-    margin-bottom: 20px;
-    font-size: 14px;
-    display: block;
-}
-
-.form-message.visible {
-    display: block;
-}
-
-.form-message.hidden {
-    display: none;
 }

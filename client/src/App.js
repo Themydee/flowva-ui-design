@@ -1,9 +1,13 @@
-import React from 'react'
+import React from 'react';
+import FormContainer from './components/auth/FormContainer';
+import './styles/style.css';
 
-const App = () => {
-  return (
-    <div>App</div>
-  )
+function App() {
+    return (
+        <div className="App">
+            <FormContainer />
+        </div>
+    );
 }
 
-export default App
+export default App;
