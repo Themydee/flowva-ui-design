@@ -356,3 +356,68 @@ body {
         font-size: 18px;
     }
 }
+
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+    .auth-form {
+        width: 90%; /* Take up most of the screen width */
+        padding: 30px; /* Reduce padding for smaller screens */
+    }
+
+    .form-header .logo {
+        font-size: 20px; /* Adjust logo size */
+    }
+
+    .form-title {
+        font-size: 18px; /* Adjust title size */
+    }
+
+    .btn {
+        font-size: 14px; /* Adjust button font size */
+        padding: 12px; /* Reduce button padding */
+    }
+
+    .btn-secondary {
+        font-size: 13px; /* Adjust secondary button font size */
+        padding: 10px; /* Reduce padding */
+    }
+}
+
+/* Adjustments for very small screens (mobile devices) */
+@media (max-width: 480px) {
+    .auth-form {
+        width: 100%; /* Take up full width */
+        padding: 20px; /* Further reduce padding */
+    }
+
+    .form-title {
+        font-size: 16px; /* Smaller title font size */
+    }
+
+    .form-group label {
+        font-size: 14px; /* Adjust label font size */
+    }
+
+    .form-group input {
+        font-size: 14px; /* Adjust input font size */
+        padding: 10px; /* Reduce input padding */
+    }
+
+    .btn {
+        font-size: 13px; /* Smaller button font size */
+        padding: 10px; /* Reduce button padding */
+    }
+
+    .btn-secondary {
+        font-size: 12px; /* Smaller secondary button font size */
+        padding: 8px; /* Reduce padding */
+    }
+
+    .divider {
+        font-size: 12px; /* Adjust divider font size */
+    }
+
+    .form-footer {
+        font-size: 12px; /* Adjust footer font size */
+    }
+}
