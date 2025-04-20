@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaGlobeAmericas } from "react-icons/fa";
 import { PiSignInBold } from "react-icons/pi";
 
+
 const SignInForm = ({ toggleForm }) => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
