@@ -39,8 +39,8 @@ body {
 }
 
 .auth-form {
-    width: 100%;
-    max-width: 1000px;
+    width: 400px;
+    max-width: 100%;
     background: white;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
@@ -63,6 +63,32 @@ body {
 .auth-form:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.auth-form .form-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gray-700);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.auth-form .form-footer {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 14px;
+    color: var(--gray-600);
+}
+
+.auth-form .form-footer a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.auth-form .form-footer a:hover {
+    text-decoration: underline;
 }
 
 .logo {
@@ -176,12 +202,21 @@ body {
     background-color: white;
     border: 1px solid var(--gray-300);
     color: var(--gray-700);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; 
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
 }
 
 .btn-secondary:hover {
     background-color: var(--gray-50);
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
 .divider {
@@ -243,15 +278,23 @@ body {
 }
 
 .error-message {
-    background-color: rgba(244, 67, 54, 0.1);
-    color: var(--error);
+    background-color: rgba(244, 67, 54, 0.1); /* Light red background */
+    color: var(--error); /* Red text */
     border-left: 4px solid var(--error);
+    padding: 12px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    font-size: 14px;
 }
 
 .success-message {
-    background-color: rgba(76, 175, 80, 0.1);
-    color: var(--success);
+    background-color: rgba(76, 175, 80, 0.1); /* Light green background */
+    color: var(--success); /* Green text */
     border-left: 4px solid var(--success);
+    padding: 12px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    font-size: 14px;
 }
 
 .password-strength {
@@ -304,7 +347,7 @@ body {
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 300px) {
     .auth-form {
         padding: 30px 20px;
     }
