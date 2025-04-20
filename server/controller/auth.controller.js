@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
 import {User} from "../models/auth.models.js"
 import { VERIFICATION_EMAIL_TEMPLATE, WELCOME_EMAIL_TEMPLATE } from '../mailer/email.template.js'
@@ -112,8 +113,45 @@ export const login = async (req, res) => {
             return res.status(400).json({success: false, message: "Invalid Email"}) //if no user with the email is found it sends this response
         }
 
-        
+        const isPasswordValid = await bcrypt.compare(password, user.password)
+        if(!isPasswordValid){
+            return res.status(400).json({success: false, message: 'Invalid Password' }) //if password doesnt match with password in the database it sends this response
+        }
+
+        //Generate jwt token here
+        const token = jwt.sign(
+            {   userId: user._id,
+                email: user.email
+            },
+            process.env.JWT_SECRET_KEY,
+            { expiresIn: '1h'}
+        );
+
+        //set token in a cookie
+        res.cookie("token", token, {
+            httpOnly: true,
+            maxAge: 3600000, //1hour
+        })
+
+        user.lastLogin = new Date();
+        await user.save()
+
+
+        res.status(201).json({
+            success: true,
+            message: 'You have been successfully logged in',
+            token,
+            user: {
+                _id: user._id,
+                email: user.email,
+                isVerified: user.isVerified,
+                lastLogin: user.lastLogin
+            }
+            
+        })
+
     } catch (error) {
-        
+        console.error("Login error", error)
+        res.status(500).json({success: false, message: "Internal server error"})
     }
 }
