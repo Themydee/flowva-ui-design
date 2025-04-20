@@ -18,7 +18,7 @@ const SignInForm = ({ toggleForm }) => {
         setMessage('Signing you in...');
         setTimeout(() => {
             setMessage('Welcome back! Redirecting...');
-            navigate('/dashboard');
+            navigate('/onboarding');
         }, 1500);
     };
 
