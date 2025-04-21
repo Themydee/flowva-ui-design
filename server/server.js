@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import cors from "cors"
 import { db } from "./dbconnector/Connect.js"
 import authRoutes from "./routes/auth.route.js"
+import onboardingRoutes from "./routes/onboarding.route.js"
 
 dotenv.config()
 
@@ -22,6 +23,7 @@ app.get("/", (req, res) => {
     res.send("Server is running");
 })
 app.use("/api/auth", authRoutes);
+app.use("/api/onboarding", onboardingRoutes);
 
 //Error handling middleware
 app.use((err, req, res, next) => {
@@ -34,19 +36,3 @@ app.listen(PORT, () => {
     db();
     console.log(`Server is running on port ${PORT}`);
 })
-
-//  try {
-//             const response = await axios.post("http://localhost:5000/api/auth/signup", {
-//                 email,
-//                 password,
-//             });
-
-//             // Assuming the response contains a success message
-//             toast.success(response.data.message || 'Account created successfully!');
-
-//             // Redirect to the sign in page
-//             navigate('/onboarding');
-//         } catch (error) {
-//             console.error('Signup failed:', error);
-//             toast.error(error.response?.data?.message || 'Signup failed. Please try again.');
-//         }

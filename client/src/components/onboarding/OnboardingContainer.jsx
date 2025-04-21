@@ -8,12 +8,14 @@ import Step5 from './Step5';
 import ProgressBar from './ProgressBar';
 import '../../styles/onboarding.css';
 
-const OnboardingContainer = () => {
+const OnboardingContainer = ({ userId }) => {
     const [currentStep, setCurrentStep] = useState(0);
+    const [stepsCompleted, setStepsCompleted] = useState([]);
     const totalSteps = 5;
 
     const nextStep = () => {
         if (currentStep < totalSteps) {
+            setStepsCompleted((prev) => [...new Set([...prev, currentStep])]); // Track completed steps
             setCurrentStep(currentStep + 1);
         }
     };
@@ -24,21 +26,25 @@ const OnboardingContainer = () => {
         }
     };
 
+    const completeOnboarding = () => {
+        console.log('Onboarding completed!');
+    };
+
     const renderStep = () => {
         const stepContent = (() => {
             switch (currentStep) {
                 case 0:
-                    return <Step0 nextStep={nextStep} />;
+                    return <Step0 nextStep={nextStep} userId={userId} />;
                 case 1:
-                    return <Step1 nextStep={nextStep} />;
+                    return <Step1 nextStep={nextStep} prevStep={prevStep} userId={userId} />;
                 case 2:
-                    return <Step2 nextStep={nextStep} />;
+                    return <Step2 nextStep={nextStep} prevStep={prevStep} userId={userId} />;
                 case 3:
-                    return <Step3 nextStep={nextStep} />;
+                    return <Step3 nextStep={nextStep} prevStep={prevStep} userId={userId} />;
                 case 4:
-                    return <Step4 nextStep={nextStep} />;
+                    return <Step4 nextStep={nextStep} prevStep={prevStep} userId={userId} />;
                 case 5:
-                    return <Step5 />;
+                    return <Step5 userId={userId} completeOnboarding={completeOnboarding} />;
                 default:
                     return null;
             }
@@ -51,7 +57,7 @@ const OnboardingContainer = () => {
 
     return (
         <div className="onboarding-container">
-            <ProgressBar currentStep={currentStep} totalSteps={totalSteps} />
+            <ProgressBar currentStep={currentStep} totalSteps={totalSteps} stepsCompleted={stepsCompleted} />
             {renderStep()}
         </div>
     );

@@ -1,10 +1,25 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
-const Step2 = ({ nextStep, className = 'step step2' }) => {
+const Step2 = ({ userId, nextStep, className = 'step step2' }) => {
     const [country, setCountry] = useState('');
 
+    const saveInput = async (inputData) => {
+        try {
+            await axios.post('http://localhost:5000/api/onboarding', {
+                userId,
+                inputData,
+            });
+            console.log('Input saved:', inputData);
+        } catch (error) {
+            console.error('Error saving input:', error.response?.data || error.message);
+        }
+    };
+
     const handleCountryChange = (event) => {
-        setCountry(event.target.value);
+        const selectedCountry = event.target.value;
+        setCountry(selectedCountry);
+        saveInput({ country: selectedCountry }); // Save the selected country immediately
     };
 
     const isValid = country !== '';
@@ -20,7 +35,7 @@ const Step2 = ({ nextStep, className = 'step step2' }) => {
                     id="country"
                     name="country"
                     value={country}
-                    onChange={handleCountryChange}
+                    onChange={handleCountryChange} // Save on change
                     className="input"
                 >
                     <option value="">Select your country</option>

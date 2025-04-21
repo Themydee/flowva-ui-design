@@ -1,30 +1,59 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
-const Step1 = ({ nextStep, className = 'step step1' }) => {
+const Step1 = ({ userId, nextStep, className = 'step step1' }) => {
     const [role, setRole] = useState('');
     const [work, setWork] = useState([]);
     const [otherWork, setOtherWork] = useState('');
     const [showError, setShowError] = useState(false);
 
+    const saveInput = async (inputData) => {
+        try {
+            await axios.post('http://localhost:5000/api/onboarding', {
+                userId,
+                inputData,
+            });
+            console.log('Input saved:', inputData);
+        } catch (error) {
+            console.error('Error saving input:', error.response?.data || error.message);
+        }
+    };
+
     const handleRoleChange = (event) => {
-        setRole(event.target.value);
+        const selectedRole = event.target.value;
+        setRole(selectedRole);
         setShowError(false); // Clear error when a role is selected
+        saveInput({ role: selectedRole }); // Save the selected role immediately
     };
 
     const toggleWork = (option) => {
-        setWork((prev) =>
-            prev.includes(option) ? prev.filter((item) => item !== option) : [...prev, option]
-        );
+        const updatedWork = work.includes(option)
+            ? work.filter((item) => item !== option)
+            : [...work, option];
+        setWork(updatedWork);
+        saveInput({ work: updatedWork }); // Save the updated work array immediately
         if (option === 'Other') {
             setOtherWork('');
         }
+    };
+
+    const handleOtherWorkChange = (event) => {
+        const otherWorkValue = event.target.value;
+        setOtherWork(otherWorkValue);
+        saveInput({ otherWork: otherWorkValue }); // Save the "Other" input immediately
     };
 
     const handleNextStep = () => {
         if (!role) {
             setShowError(true); // Show error if no role is selected
         } else {
-            nextStep(); // Proceed to the next step if valid
+            const inputData = {
+                role,
+                work,
+                otherWork: work.includes('Other') ? otherWork : '',
+            };
+            saveInput(inputData); // Save all data before moving to the next step
+            nextStep(); // Move to the next step
         }
     };
 
@@ -45,7 +74,7 @@ const Step1 = ({ nextStep, className = 'step step1' }) => {
                                 name="role"
                                 value={option}
                                 checked={role === option}
-                                onChange={handleRoleChange}
+                                onChange={handleRoleChange} // Save on change
                             />
                             {option}
                         </label>
@@ -64,7 +93,7 @@ const Step1 = ({ nextStep, className = 'step step1' }) => {
                                 name="work"
                                 value={option}
                                 checked={work.includes(option)}
-                                onChange={() => toggleWork(option)}
+                                onChange={() => toggleWork(option)} // Save on toggle
                             />
                             <span className="label-text">{option}</span>
                         </label>
@@ -75,7 +104,7 @@ const Step1 = ({ nextStep, className = 'step step1' }) => {
                                 type="text"
                                 placeholder="Please specify"
                                 value={otherWork}
-                                onChange={(e) => setOtherWork(e.target.value)}
+                                onChange={handleOtherWorkChange} // Save on change
                                 className="input"
                             />
                         </div>
