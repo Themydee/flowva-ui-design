@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaGlobeAmericas } from "react-icons/fa";
 import { CiBookmark } from "react-icons/ci";
+import axios from 'axios';
 
 const SignUpForm = ({ toggleForm }) => {
     const navigate = useNavigate();
@@ -12,7 +13,7 @@ const SignUpForm = ({ toggleForm }) => {
     const [isSuccess, setIsSuccess] = useState(false); // New state to track success messages
     const [passwordStrength, setPasswordStrength] = useState(0);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!email || !password || !confirmPassword) {
             setMessage('Please fill in all fields');
@@ -29,13 +30,25 @@ const SignUpForm = ({ toggleForm }) => {
             setIsSuccess(false); // Error message
             return;
         }
-        setMessage('Creating your account...');
-        setIsSuccess(true); // Success message
-        setTimeout(() => {
-            setMessage('Account created successfully! Redirecting...');
+        
+        try {
+            const response = await axios.post("http://localhost:5000/api/auth/signup", {
+                email,
+                password,
+            });
+
+            // Handle success response from the backend
+            setMessage(response.data.message || 'Account created successfully!');
             setIsSuccess(true); // Success message
-            navigate('/verify-account'); // Redirect to the verification page
-        }, 1500);
+
+            setTimeout(() => {
+                navigate('/onboarding'); // Redirect to the onboarding page
+            }, 1000);
+        } catch (error) {
+            // Handle error response from the backend
+            setMessage(error.response?.data?.message || 'Signup failed. Please try again.');
+            setIsSuccess(false); // Error message
+        }
     };
 
     const handlePasswordChange = (e) => {

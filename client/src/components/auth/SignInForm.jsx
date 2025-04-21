@@ -2,25 +2,42 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaGlobeAmericas } from "react-icons/fa";
 import { PiSignInBold } from "react-icons/pi";
-
+import axios from 'axios'; 
 
 const SignInForm = ({ toggleForm }) => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [isSuccess, setIsSuccess] = useState(false); // Add a state to track success
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!email || !password) {
             setMessage('Please fill in all fields');
+            setIsSuccess(false); // Error state
             return;
         }
-        setMessage('Signing you in...');
-        setTimeout(() => {
-            setMessage('Welcome back! Redirecting...');
-            navigate('/onboarding');
-        }, 1500);
+
+        try {
+            setMessage('Signing you in...');
+            setIsSuccess(false); // Reset success state
+            const response = await axios.post("http://localhost:5000/api/auth/login", {
+                email,
+                password,
+            });
+
+            // Handle success response from the backend
+            setMessage(response.data.message || 'Welcome back! Redirecting...');
+            setIsSuccess(true); // Success state
+            setTimeout(() => {
+                navigate('/onboarding'); // Redirect to the onboarding page
+            }, 1500);
+        } catch (error) {
+            // Handle error response from the backend
+            setMessage(error.response?.data?.message || 'Sign-in failed. Please try again.');
+            setIsSuccess(false); // Error state
+        }
     };
 
     return (
@@ -35,7 +52,7 @@ const SignInForm = ({ toggleForm }) => {
             <div className="form-title">Welcome back</div>
 
             {message && (
-                <div className="message error-message">
+                <div className={`message ${isSuccess ? 'success-message' : 'error-message'}`}>
                     {message}
                 </div>
             )}
