@@ -1,37 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Step5 = ({ userId, className = 'step step5' }) => {
+const Step5 = ({ email, isStep4Complete, className = 'step step5' }) => {
     const [showPopup, setShowPopup] = useState(false);
     const navigate = useNavigate();
+    const [error, setError] = useState('');
 
     const completeOnboarding = async () => {
         try {
-            await axios.post('http://localhost:5000/api/onboarding', {
-                userId,
-                inputData: { isCompleted: true }, // Mark onboarding as completed
+            console.log('Sending email:', email);
+            console.log('Sending inputData:', { isCompleted: true });
+
+            const response = await axios.post('http://localhost:5000/api/onboarding/', {
+                email,
+                inputData: { isCompleted: true },
             });
-            console.log('Onboarding marked as complete');
+            console.log('Onboarding marked as complete:', response.data);
         } catch (error) {
             console.error('Error completing onboarding:', error.response?.data || error.message);
         }
     };
 
-    const handleGoToDashboard = () => {
+    const handleGoToDashboard = async () => {
+        if (!isStep4Complete) {
+            setError('Please complete all steps before proceeding.');
+            return;
+        }
+
         setShowPopup(true);
 
-        // Save onboarding completion and redirect to dashboard
-        completeOnboarding();
+        // Save onboarding completion before navigating
+        await completeOnboarding();
 
+        // After 2 seconds, navigate to the dashboard
         setTimeout(() => {
-            navigate('/dashboard'); // Redirect to the dashboard
+            navigate('/dashboard');
         }, 2000);
     };
 
     const closePopup = () => {
         setShowPopup(false);
     };
+
+    useEffect(() => {
+        // Clear error when Step 4 is completed
+        if (isStep4Complete) {
+            setError('');
+        }
+    }, [isStep4Complete]);
 
     return (
         <div className={className}>
@@ -55,6 +72,9 @@ const Step5 = ({ userId, className = 'step step5' }) => {
                     </div>
                 </div>
             )}
+
+            {/* Show error if Step 4 is not completed */}
+            {error && <p className="error-text">{error}</p>}
         </div>
     );
 };

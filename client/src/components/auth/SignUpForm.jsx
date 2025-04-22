@@ -25,17 +25,15 @@ const SignUpForm = ({ toggleForm }) => {
             setIsSuccess(false); // Error message
             return;
         }
-        if (password.length < 8) {
-            setMessage('Password must be at least 8 characters');
-            setIsSuccess(false); // Error message
-            return;
-        }
         
         try {
             const response = await axios.post("http://localhost:5000/api/auth/signup", {
                 email,
                 password,
             });
+
+            // Store email in localStorage
+            localStorage.setItem('email', response.data.user.email);
 
             // Handle success response from the backend
             setMessage(response.data.message || 'Account created successfully!');

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const Step1 = ({ userId, nextStep, className = 'step step1' }) => {
+const Step1 = ({ email, nextStep, className = 'step step1' }) => {
     const [role, setRole] = useState('');
     const [work, setWork] = useState([]);
     const [otherWork, setOtherWork] = useState('');
@@ -9,8 +9,8 @@ const Step1 = ({ userId, nextStep, className = 'step step1' }) => {
 
     const saveInput = async (inputData) => {
         try {
-            await axios.post('http://localhost:5000/api/onboarding', {
-                userId,
+            await axios.post('http://localhost:5000/api/onboarding/', {
+                email,
                 inputData,
             });
             console.log('Input saved:', inputData);
@@ -19,41 +19,41 @@ const Step1 = ({ userId, nextStep, className = 'step step1' }) => {
         }
     };
 
+    // Save role immediately when changed
     const handleRoleChange = (event) => {
         const selectedRole = event.target.value;
         setRole(selectedRole);
-        setShowError(false); // Clear error when a role is selected
-        saveInput({ role: selectedRole }); // Save the selected role immediately
+        setShowError(false);
     };
 
+    // Toggle work options — save will happen in useEffect after state update
     const toggleWork = (option) => {
         const updatedWork = work.includes(option)
             ? work.filter((item) => item !== option)
             : [...work, option];
         setWork(updatedWork);
-        saveInput({ work: updatedWork }); // Save the updated work array immediately
         if (option === 'Other') {
             setOtherWork('');
         }
     };
 
+    // Save otherWork only if "Other" is selected
     const handleOtherWorkChange = (event) => {
-        const otherWorkValue = event.target.value;
-        setOtherWork(otherWorkValue);
-        saveInput({ otherWork: otherWorkValue }); // Save the "Other" input immediately
+        setOtherWork(event.target.value);
     };
 
+    // Final save and proceed
     const handleNextStep = () => {
         if (!role) {
-            setShowError(true); // Show error if no role is selected
+            setShowError(true);
         } else {
             const inputData = {
                 role,
                 work,
                 otherWork: work.includes('Other') ? otherWork : '',
             };
-            saveInput(inputData); // Save all data before moving to the next step
-            nextStep(); // Move to the next step
+            saveInput(inputData);
+            nextStep();
         }
     };
 
@@ -74,7 +74,7 @@ const Step1 = ({ userId, nextStep, className = 'step step1' }) => {
                                 name="role"
                                 value={option}
                                 checked={role === option}
-                                onChange={handleRoleChange} // Save on change
+                                onChange={handleRoleChange}
                             />
                             {option}
                         </label>
@@ -93,7 +93,7 @@ const Step1 = ({ userId, nextStep, className = 'step step1' }) => {
                                 name="work"
                                 value={option}
                                 checked={work.includes(option)}
-                                onChange={() => toggleWork(option)} // Save on toggle
+                                onChange={() => toggleWork(option)}
                             />
                             <span className="label-text">{option}</span>
                         </label>
@@ -104,7 +104,7 @@ const Step1 = ({ userId, nextStep, className = 'step step1' }) => {
                                 type="text"
                                 placeholder="Please specify"
                                 value={otherWork}
-                                onChange={handleOtherWorkChange} // Save on change
+                                onChange={handleOtherWorkChange}
                                 className="input"
                             />
                         </div>

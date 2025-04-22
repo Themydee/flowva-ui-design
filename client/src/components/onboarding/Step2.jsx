@@ -1,25 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const Step2 = ({ userId, nextStep, className = 'step step2' }) => {
+const Step2 = ({ email, nextStep, className = 'step step2' }) => {
     const [country, setCountry] = useState('');
+    const [error, setError] = useState(null); // Error state
 
+    // Save input data for the current step (Step 2)
     const saveInput = async (inputData) => {
         try {
-            await axios.post('http://localhost:5000/api/onboarding', {
-                userId,
+            console.log('Sending inputData:', inputData);  // Log the data being sent
+
+            const response = await axios.post('http://localhost:5000/api/onboarding/', {
+                email,
                 inputData,
             });
-            console.log('Input saved:', inputData);
+            console.log('Input saved:', response.data);  // Log the response
         } catch (error) {
             console.error('Error saving input:', error.response?.data || error.message);
+            setError('There was an error saving your data. Please try again.');
         }
     };
 
+    // Handle country change
     const handleCountryChange = (event) => {
-        const selectedCountry = event.target.value;
-        setCountry(selectedCountry);
-        saveInput({ country: selectedCountry }); // Save the selected country immediately
+        setCountry(event.target.value); // Set the selected country
+        setError(null); // Clear error on input change
+    };
+
+    // Handle submit (save data for this step)
+    const handleSubmit = async () => {
+        if (country) {
+            await saveInput({ country });
+            nextStep(); // Proceed to the next step after saving
+        } else {
+            setError('Please select a country.');
+        }
     };
 
     const isValid = country !== '';
@@ -35,7 +50,7 @@ const Step2 = ({ userId, nextStep, className = 'step step2' }) => {
                     id="country"
                     name="country"
                     value={country}
-                    onChange={handleCountryChange} // Save on change
+                    onChange={handleCountryChange}
                     className="input"
                 >
                     <option value="">Select your country</option>
@@ -52,8 +67,10 @@ const Step2 = ({ userId, nextStep, className = 'step step2' }) => {
                 </select>
             </div>
 
+            {error && <p className="error-text">{error}</p>} {/* Display error message */}
+
             <div className="btn-group">
-                <button className="btn" onClick={nextStep} disabled={!isValid}>
+                <button className="btn" onClick={handleSubmit} disabled={!isValid}>
                     Continue
                 </button>
                 <button className="btn-skip" onClick={nextStep}>

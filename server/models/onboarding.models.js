@@ -3,25 +3,18 @@ import mongoose from 'mongoose';
 const onboardingSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Reference to the User model
+        ref: 'User',
         required: true,
     },
-    stepsCompleted: {
-        type: [String], // Array of completed steps
-        default: [],
-    },
     currentStep: {
-        type: String, // The current step the user is on
-        enum: ['profile_setup', 'preferences', 'tutorial', 'finished'], // Define possible steps
-        default: 'profile_setup',
+        type: String,
+        enum: ['step1', 'step2', 'step3', 'step4', 'step5'],
+        default: 'step1',
     },
-    isCompleted: {
-        type: Boolean, // Whether the onboarding process is completed
-        default: false,
-    },
+    
     data: {
-        type: Object, // Flexible structure to store input data for each step
-        default: {}, // Default to an empty object
+        type: Object,
+        default: {},
     },
     createdAt: {
         type: Date,
