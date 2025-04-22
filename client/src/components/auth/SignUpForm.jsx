@@ -29,7 +29,7 @@ const SignUpForm = ({ toggleForm }) => {
         }
 
         try {
-            const response = await axios.post("https://flowva-ui.onrender.com/api/auth/signup", {
+            const response = await axios.post("http://localhost:5000/api/auth/signup", {
                 email,
                 password,
             });

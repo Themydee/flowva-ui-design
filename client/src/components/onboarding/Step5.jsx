@@ -12,7 +12,7 @@ const Step5 = ({ email, completeOnboarding, isStep4Complete, className = 'step s
             console.log('Sending email:', email);
             console.log('Sending inputData:', { isCompleted: true, currentStep: 'step5' });
 
-            const response = await axios.post('https://flowva-ui.onrender.com/api/onboarding/', {
+            const response = await axios.post('http://localhost:5000/api/onboarding/', {
                 email,
                 inputData: { isCompleted: true, currentStep: 'step5' },
             });

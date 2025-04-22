@@ -7,7 +7,7 @@ const Step2 = ({ email, nextStep, className = 'step step2' }) => {
 
     const saveInput = async (inputData) => {
         try {
-            const response = await axios.post('https://flowva-ui.onrender.com/api/onboarding/', {
+            const response = await axios.post('http://localhost:5000/api/onboarding/', {
                 email,
                 inputData: {
                     ...inputData,
