@@ -16,7 +16,10 @@ const Step4 = ({ email, nextStep, isStep3Complete, className = 'step step4' }) =
         try {
             await axios.post('http://localhost:5000/api/onboarding/', {
                 email,
-                inputData,
+                inputData: {
+                    ...inputData,
+                    currentStep: 'step4', // ✅ include current step
+                },
             });
             console.log('Input saved:', inputData);
         } catch (error) {
@@ -29,7 +32,7 @@ const Step4 = ({ email, nextStep, isStep3Complete, className = 'step step4' }) =
             setError('Please select at least one goal to continue.');
         } else {
             saveInput({ goals: selectedGoals });
-            nextStep(); // Proceed to the next step
+            nextStep();
         }
     };
 
@@ -38,11 +41,10 @@ const Step4 = ({ email, nextStep, isStep3Complete, className = 'step step4' }) =
             ? selectedGoals.filter((g) => g !== goal)
             : [...selectedGoals, goal];
         setSelectedGoals(updatedGoals);
-        setError(''); // Clear error when a goal is selected
+        setError('');
     };
 
     useEffect(() => {
-        // If Step 3 isn't completed, don't show the error message yet.
         if (!isStep3Complete) {
             setError('');
         }
@@ -61,14 +63,13 @@ const Step4 = ({ email, nextStep, isStep3Complete, className = 'step step4' }) =
                             name="goals"
                             value={goal}
                             checked={selectedGoals.includes(goal)}
-                            onChange={() => toggleGoal(goal)} // Toggle goal selection
+                            onChange={() => toggleGoal(goal)}
                         />
                         {goal}
                     </label>
                 ))}
             </div>
 
-            {/* Show error only if no goals are selected and Step 3 is complete */}
             {isStep3Complete && selectedGoals.length === 0 && (
                 <p className="error-text">{error}</p>
             )}

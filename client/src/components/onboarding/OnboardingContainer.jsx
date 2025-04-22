@@ -58,7 +58,7 @@ const OnboardingContainer = () => {
                 case 4:
                     return <Step4 nextStep={nextStep} prevStep={prevStep} email={email} />;
                 case 5:
-                    return <Step5 email={email} completeOnboarding={completeOnboarding} />;
+                    return <Step5 email={email} completeOnboarding={completeOnboarding} isStep4Complete={stepsCompleted.includes(4)} />;
                 default:
                     return null;
             }

@@ -11,19 +11,11 @@ const onboardingSchema = new mongoose.Schema({
         enum: ['step1', 'step2', 'step3', 'step4', 'step5'],
         default: 'step1',
     },
-    
     data: {
         type: Object,
         default: {},
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now,
-    },
-});
+    }
+}, { timestamps: true }); // 🔥 This adds and updates createdAt and updatedAt automatically
+
 
 export const Onboarding = mongoose.model('Onboarding', onboardingSchema);

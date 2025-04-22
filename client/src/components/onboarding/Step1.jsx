@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
 const Step1 = ({ email, nextStep, className = 'step step1' }) => {
@@ -11,7 +11,10 @@ const Step1 = ({ email, nextStep, className = 'step step1' }) => {
         try {
             await axios.post('http://localhost:5000/api/onboarding/', {
                 email,
-                inputData,
+                inputData: {
+                    ...inputData,
+                    currentStep: 'step1', // ✅ CRITICAL
+                },
             });
             console.log('Input saved:', inputData);
         } catch (error) {
@@ -19,42 +22,38 @@ const Step1 = ({ email, nextStep, className = 'step step1' }) => {
         }
     };
 
-    // Save role immediately when changed
     const handleRoleChange = (event) => {
         const selectedRole = event.target.value;
         setRole(selectedRole);
         setShowError(false);
     };
 
-    // Toggle work options — save will happen in useEffect after state update
     const toggleWork = (option) => {
         const updatedWork = work.includes(option)
             ? work.filter((item) => item !== option)
             : [...work, option];
         setWork(updatedWork);
-        if (option === 'Other') {
-            setOtherWork('');
-        }
+        if (option === 'Other') setOtherWork('');
     };
 
-    // Save otherWork only if "Other" is selected
     const handleOtherWorkChange = (event) => {
         setOtherWork(event.target.value);
     };
 
-    // Final save and proceed
-    const handleNextStep = () => {
+    const handleNextStep = async () => {
         if (!role) {
             setShowError(true);
-        } else {
-            const inputData = {
-                role,
-                work,
-                otherWork: work.includes('Other') ? otherWork : '',
-            };
-            saveInput(inputData);
-            nextStep();
+            return;
         }
+
+        const inputData = {
+            role,
+            work,
+            otherWork: work.includes('Other') ? otherWork : '',
+        };
+
+        await saveInput(inputData);
+        nextStep();
     };
 
     const isValid = role && (work.length > 0 || otherWork);

@@ -2,20 +2,21 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Step5 = ({ email, isStep4Complete, className = 'step step5' }) => {
+const Step5 = ({ email, completeOnboarding, isStep4Complete, className = 'step step5' }) => {
     const [showPopup, setShowPopup] = useState(false);
     const navigate = useNavigate();
     const [error, setError] = useState('');
 
-    const completeOnboarding = async () => {
+    const completeOnboardingProcess = async () => {
         try {
             console.log('Sending email:', email);
-            console.log('Sending inputData:', { isCompleted: true });
+            console.log('Sending inputData:', { isCompleted: true, currentStep: 'step5' });
 
             const response = await axios.post('http://localhost:5000/api/onboarding/', {
                 email,
-                inputData: { isCompleted: true },
+                inputData: { isCompleted: true, currentStep: 'step5' },
             });
+
             console.log('Onboarding marked as complete:', response.data);
         } catch (error) {
             console.error('Error completing onboarding:', error.response?.data || error.message);
@@ -29,11 +30,8 @@ const Step5 = ({ email, isStep4Complete, className = 'step step5' }) => {
         }
 
         setShowPopup(true);
+        await completeOnboardingProcess();
 
-        // Save onboarding completion before navigating
-        await completeOnboarding();
-
-        // After 2 seconds, navigate to the dashboard
         setTimeout(() => {
             navigate('/dashboard');
         }, 2000);
@@ -44,7 +42,6 @@ const Step5 = ({ email, isStep4Complete, className = 'step step5' }) => {
     };
 
     useEffect(() => {
-        // Clear error when Step 4 is completed
         if (isStep4Complete) {
             setError('');
         }
@@ -56,7 +53,7 @@ const Step5 = ({ email, isStep4Complete, className = 'step step5' }) => {
             <p>Your Flowva library is ready to use. We'll take you to your dashboard now where you can start organizing your tools and tracking your productivity.</p>
 
             <div className="btn-group">
-                <button className="btn" onClick={handleGoToDashboard}>
+                <button className="btn" onClick={handleGoToDashboard} disabled={!isStep4Complete}>
                     Go to Dashboard
                 </button>
             </div>
@@ -73,10 +70,10 @@ const Step5 = ({ email, isStep4Complete, className = 'step step5' }) => {
                 </div>
             )}
 
-            {/* Show error if Step 4 is not completed */}
             {error && <p className="error-text">{error}</p>}
         </div>
     );
 };
 
 export default Step5;
+

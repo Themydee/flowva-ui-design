@@ -17,42 +17,41 @@ const Step3 = ({ email, nextStep, isStep2Complete, className = 'step step3' }) =
         { name: 'Calendly', icon: '📅' },
     ];
 
-    // Function to save the selected tools
     const saveInput = async (inputData) => {
         try {
             await axios.post('http://localhost:5000/api/onboarding/', {
                 email,
-                inputData,
+                inputData: {
+                    ...inputData,
+                    currentStep: 'step3', // ✅ Required for step tracking
+                },
             });
-            console.log('Input saved:', inputData);  // Log the data sent
+            console.log('Input saved:', inputData);
         } catch (error) {
             console.error('Error saving input:', error.response?.data || error.message);
         }
     };
 
-    // Proceed to the next step after saving the selected tools
     const handleNextStep = () => {
         if (selectedTools.length === 0) {
-            setError('Please select at least one tool to continue.');  // Show error if no tool is selected
+            setError('Please select at least one tool to continue.');
         } else {
-            saveInput({ tools: selectedTools });  // Save selected tools
-            nextStep();  // Proceed to the next step
+            saveInput({ tools: selectedTools });
+            nextStep();
         }
     };
 
-    // Toggle the selection of tools
     const toggleTool = (tool) => {
         const updatedTools = selectedTools.includes(tool)
-            ? selectedTools.filter((t) => t !== tool)  // Deselect the tool
-            : [...selectedTools, tool];  // Add the tool to selected tools
-        setSelectedTools(updatedTools);  // Update state
-        setError('');  // Clear error when a tool is selected
+            ? selectedTools.filter((t) => t !== tool)
+            : [...selectedTools, tool];
+        setSelectedTools(updatedTools);
+        setError('');
     };
 
-    // Effect to reset error message if Step 2 is not complete
     useEffect(() => {
         if (!isStep2Complete) {
-            setError('');  // Reset error if Step 2 is incomplete
+            setError('');
         }
     }, [isStep2Complete]);
 
@@ -66,7 +65,7 @@ const Step3 = ({ email, nextStep, isStep2Complete, className = 'step step3' }) =
                     <div
                         key={tool.name}
                         className={`tool-item ${selectedTools.includes(tool.name) ? 'selected' : ''}`}
-                        onClick={() => toggleTool(tool.name)}  // Toggle tool selection
+                        onClick={() => toggleTool(tool.name)}
                     >
                         <span className="tool-icon">{tool.icon}</span>
                         <span className="tool-name">{tool.name}</span>
@@ -74,7 +73,6 @@ const Step3 = ({ email, nextStep, isStep2Complete, className = 'step step3' }) =
                 ))}
             </div>
 
-            {/* Show error message if Step 2 is complete and no tools are selected */}
             {isStep2Complete && selectedTools.length === 0 && (
                 <p className="error-text">{error}</p>
             )}

@@ -1,37 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
 const Step2 = ({ email, nextStep, className = 'step step2' }) => {
     const [country, setCountry] = useState('');
-    const [error, setError] = useState(null); // Error state
+    const [error, setError] = useState(null);
 
-    // Save input data for the current step (Step 2)
     const saveInput = async (inputData) => {
         try {
-            console.log('Sending inputData:', inputData);  // Log the data being sent
-
             const response = await axios.post('http://localhost:5000/api/onboarding/', {
                 email,
-                inputData,
+                inputData: {
+                    ...inputData,
+                    currentStep: 'step2', // ✅ this is required
+                },
             });
-            console.log('Input saved:', response.data);  // Log the response
+            console.log('Input saved:', response.data);
         } catch (error) {
             console.error('Error saving input:', error.response?.data || error.message);
             setError('There was an error saving your data. Please try again.');
         }
     };
 
-    // Handle country change
     const handleCountryChange = (event) => {
-        setCountry(event.target.value); // Set the selected country
-        setError(null); // Clear error on input change
+        setCountry(event.target.value);
+        setError(null);
     };
 
-    // Handle submit (save data for this step)
     const handleSubmit = async () => {
         if (country) {
             await saveInput({ country });
-            nextStep(); // Proceed to the next step after saving
+            nextStep();
         } else {
             setError('Please select a country.');
         }
@@ -67,7 +65,7 @@ const Step2 = ({ email, nextStep, className = 'step step2' }) => {
                 </select>
             </div>
 
-            {error && <p className="error-text">{error}</p>} {/* Display error message */}
+            {error && <p className="error-text">{error}</p>}
 
             <div className="btn-group">
                 <button className="btn" onClick={handleSubmit} disabled={!isValid}>
