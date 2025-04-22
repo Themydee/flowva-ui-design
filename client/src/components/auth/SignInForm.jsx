@@ -2,46 +2,67 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaGlobeAmericas } from "react-icons/fa";
 import { PiSignInBold } from "react-icons/pi";
-import axios from 'axios'; 
+import axios from 'axios';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+
+// Firebase imports
+import { auth, provider } from '../firebase'; // Adjust path as needed
 
 const SignInForm = ({ toggleForm }) => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
-    const [isSuccess, setIsSuccess] = useState(false); // Add a state to track success
+    const [isSuccess, setIsSuccess] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!email || !password) {
             setMessage('Please fill in all fields');
-            setIsSuccess(false); // Error state
+            setIsSuccess(false);
             return;
         }
 
         try {
             setMessage('Signing you in...');
-            setIsSuccess(false); // Reset success state
+            setIsSuccess(false);
+
             const response = await axios.post("http://localhost:5000/api/auth/login", {
                 email,
                 password,
             });
 
-            // Store email in localStorage
             localStorage.setItem('email', response.data.user.email);
 
-            // Handle success response from the backend
             setMessage(response.data.message || 'Welcome back! Redirecting...');
-            setIsSuccess(true); // Success state
+            setIsSuccess(true);
             setTimeout(() => {
-                navigate('/onboarding'); // Redirect to the onboarding page
+                navigate('/onboarding');
             }, 1500);
         } catch (error) {
-            // Handle error response from the backend
             setMessage(error.response?.data?.message || 'Sign-in failed. Please try again.');
-            setIsSuccess(false); // Error state
+            setIsSuccess(false);
         }
     };
+
+        const googleLogin = () => {
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider).then(async (result) => {
+                const user = result.user;
+            
+                localStorage.setItem('email', user.email); // Store Google email in localStorage
+    
+                setMessage('Google login successful!');
+                setIsSuccess(true);
+    
+                setTimeout(() => {
+                    navigate('/onboarding'); // Redirect to the onboarding page after Google login
+                }, 1000);
+            }).catch((error) => {
+                setMessage(error.message || 'Google login failed');
+                setIsSuccess(false);
+            });
+        };
 
     return (
         <form onSubmit={handleSubmit} className="auth-form animate-fadeInUp">
@@ -91,7 +112,7 @@ const SignInForm = ({ toggleForm }) => {
 
             <div className="divider">or continue with</div>
 
-            <button type="button" className="btn btn-secondary" onClick={() => setMessage('Redirecting to Google...')}>
+            <button type="button" className="btn btn-secondary" onClick={googleLogin}>
                 <svg width="18" height="18" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />

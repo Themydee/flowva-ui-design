@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { FaGlobeAmericas } from "react-icons/fa";
 import { CiBookmark } from "react-icons/ci";
 import axios from 'axios';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../firebase'; 
 
 const SignUpForm = ({ toggleForm }) => {
     const navigate = useNavigate();
@@ -25,7 +27,7 @@ const SignUpForm = ({ toggleForm }) => {
             setIsSuccess(false); // Error message
             return;
         }
-        
+
         try {
             const response = await axios.post("http://localhost:5000/api/auth/signup", {
                 email,
@@ -47,6 +49,25 @@ const SignUpForm = ({ toggleForm }) => {
             setMessage(error.response?.data?.message || 'Signup failed. Please try again.');
             setIsSuccess(false); // Error message
         }
+    };
+
+    const googleLogin = () => {
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider).then(async (result) => {
+            const user = result.user;
+        
+            localStorage.setItem('email', user.email); // Store Google email in localStorage
+
+            setMessage('Google login successful!');
+            setIsSuccess(true);
+
+            setTimeout(() => {
+                navigate('/onboarding'); // Redirect to the onboarding page after Google login
+            }, 1000);
+        }).catch((error) => {
+            setMessage(error.message || 'Google login failed');
+            setIsSuccess(false);
+        });
     };
 
     const handlePasswordChange = (e) => {
@@ -140,7 +161,7 @@ const SignUpForm = ({ toggleForm }) => {
 
             <div className="divider">or continue with</div>
 
-            <button type="button" className="btn btn-secondary" onClick={() => setMessage('Redirecting to Google...')}>
+            <button type="button" className="btn btn-secondary" onClick={googleLogin}>
                 <svg width="18" height="18" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
