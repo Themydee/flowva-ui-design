@@ -29,7 +29,7 @@ const SignUpForm = ({ toggleForm }) => {
         }
 
         try {
-            const response = await axios.post("https://backend-flowva.onrender.com//api/auth/signup", {
+            const response = await axios.post("https://backend-flowva.onrender.com/api/auth/signup", {
                 email,
                 password,
             });
