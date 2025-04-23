@@ -14,7 +14,7 @@ const Step4 = ({ email, nextStep, isStep3Complete, className = 'step step4' }) =
 
     const saveInput = async (inputData) => {
         try {
-            await axios.post('http://localhost:5000/api/onboarding/', {
+            await axios.post('https://backend-flowva.onrender.com/api/onboarding/', {
                 email,
                 inputData: {
                     ...inputData,
