@@ -40,10 +40,8 @@ const SignUpForm = ({ toggleForm }) => {
             // Handle success response from the backend
             setMessage(response.data.message || 'Account created successfully!');
             setIsSuccess(true); // Success message
-
-            setTimeout(() => {
-                navigate('/onboarding'); // Redirect to the onboarding page
-            }, 1000);
+            
+            navigate('/onboarding'); // Redirect to the onboarding page
         } catch (error) {
             // Handle error response from the backend
             setMessage(error.response?.data?.message || 'Signup failed. Please try again.');
